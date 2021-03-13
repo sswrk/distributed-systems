@@ -29,7 +29,6 @@ public class ServerClientTcp implements Runnable{
     public void run() {
         while(true){
             try {
-                System.out.println("Oczekiwanie na wiadomosc");
                 String messageFromClient = inputStream.readUTF();
                 System.out.println(name + ": " + messageFromClient);
 
@@ -52,8 +51,8 @@ public class ServerClientTcp implements Runnable{
             socket.close();
             inputStream.close();
             outputStream.close();
-            //TODO: remove client from clients map in Server class
-            System.out.println(name + " has disconnected");
+            server.getClients().remove(new AddressPort(socket.getInetAddress().getHostName(), socket.getPort()));
+            System.out.println(name + " został odłączony od serwera");
         } catch (IOException e){
             System.out.println("Problem while disconnecting user " + name);
         }
