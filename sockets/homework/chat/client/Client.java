@@ -39,7 +39,7 @@ public class Client {
         setMulticastSocket();
     }
 
-    public void start() throws IOException, InterruptedException {
+    public void start() throws InterruptedException, IOException {
 
         Thread readMessagesThreadTcp = new Thread(() -> {
             while (true) {
@@ -144,8 +144,8 @@ public class Client {
                 clientSocketInfo.getPort()
         );
 
-        DataInputStream inputStreamTcp = new DataInputStream(socketTcp.getInputStream());
-        DataOutputStream outputStreamTcp = new DataOutputStream(socketTcp.getOutputStream());
+        inputStreamTcp = new DataInputStream(socketTcp.getInputStream());
+        outputStreamTcp = new DataOutputStream(socketTcp.getOutputStream());
     }
 
     private void setUdpSocket() throws IOException{
