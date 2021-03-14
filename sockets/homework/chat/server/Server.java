@@ -79,8 +79,7 @@ public class Server {
                 String msg = new String(receivePacket.getData());
                 String username = clients.get(new AddressPort(receivePacket.getAddress().getHostName(), receivePacket.getPort())).getId();
 
-                msg = username + ": " + msg;
-                System.out.println(msg);
+                System.out.println("<" + username + "> " + msg);
 
                 for(Map.Entry<AddressPort, ServerClientTcp> client : clients.entrySet()){
                     if(client.getKey().getPort()!=receivePacket.getPort()){

@@ -82,7 +82,7 @@ public class Client {
                     multicastSocket.receive(receivePacket);
                     String msg = new String(receivePacket.getData());
                     System.out.println(msg);
-                } catch (IOException e){
+                } catch (IOException e) {
                     System.err.println("UWAGA: Utracono połączenie z kanałem multicast");
                     break;
                 }
@@ -130,8 +130,11 @@ public class Client {
         writeMessagesThread.start();
 
         readMessagesThread.join();
+        serverSocket.close();
         readMessagesThreadUdp.join();
+        serverSocketUdp.close();
         readMessagesThreadMulticast.join();
+        multicastSocket.close();
         writeMessagesThread.join();
 
         System.out.println("KONIEC PRACY KLIENTA");
