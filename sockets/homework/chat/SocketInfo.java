@@ -4,12 +4,12 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Objects;
 
-public class AddressPort {
+public class SocketInfo {
 
     private final InetAddress address;
     private final int port;
 
-    public AddressPort(String address, int port) throws UnknownHostException {
+    public SocketInfo(String address, int port) throws UnknownHostException {
         this.address = InetAddress.getByName(address);
         this.port = port;
     }
@@ -26,7 +26,7 @@ public class AddressPort {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AddressPort that = (AddressPort) o;
+        SocketInfo that = (SocketInfo) o;
         return port == that.port && Objects.equals(address, that.address);
     }
 

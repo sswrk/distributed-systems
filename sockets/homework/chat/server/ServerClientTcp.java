@@ -1,6 +1,6 @@
 package chat.server;
 
-import chat.AddressPort;
+import chat.SocketInfo;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -32,8 +32,8 @@ public class ServerClientTcp implements Runnable{
                 String messageFromClient = inputStream.readUTF();
                 System.out.println("<" + id + "> " + messageFromClient);
 
-                Map<AddressPort, ServerClientTcp> serverClients = server.getClients();
-                for(Map.Entry<AddressPort, ServerClientTcp> client : serverClients.entrySet()){
+                Map<SocketInfo, ServerClientTcp> serverClients = server.getClients();
+                for(Map.Entry<SocketInfo, ServerClientTcp> client : serverClients.entrySet()){
                     if(client.getValue()!=this){
                         client.getValue().getOutputStream().writeUTF(messageFromClient);
                     }
@@ -51,7 +51,7 @@ public class ServerClientTcp implements Runnable{
             socket.close();
             inputStream.close();
             outputStream.close();
-            server.getClients().remove(new AddressPort(socket.getInetAddress().getHostName(), socket.getPort()));
+            server.getClients().remove(new SocketInfo(socket.getInetAddress().getHostName(), socket.getPort()));
             System.out.println(id + " został odłączony od serwera");
         } catch (IOException e){
             System.out.println("Problem while disconnecting user " + id);

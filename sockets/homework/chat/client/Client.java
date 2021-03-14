@@ -1,6 +1,6 @@
 package chat.client;
 
-import chat.AddressPort;
+import chat.SocketInfo;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -11,44 +11,40 @@ import java.util.Scanner;
 
 public class Client {
 
-    private final String name;
-    private final AddressPort serverAddressPort;
-    private final AddressPort clientAddressPort;
-    private final AddressPort multicastAddressPort;
+    private final String nickname;
 
-    public Client(String name, AddressPort serverAddressPort, AddressPort clientAddressPort, AddressPort multicastAddressPort){
-        this.name = name;
-        this.serverAddressPort = serverAddressPort;
-        this.clientAddressPort = clientAddressPort;
-        this.multicastAddressPort = multicastAddressPort;
+    private final SocketInfo serverSocketInfo;
+    private final SocketInfo clientSocketInfo;
+    private final SocketInfo multicastSocketInfo;
+
+    private Socket socketTcp;
+    private DataInputStream inputStreamTcp;
+    private DataOutputStream outputStreamTcp;
+
+    private DatagramSocket socketUdp;
+
+    private MulticastSocket socketMulticast;
+    private SocketAddress socketAddressMulticast;
+    private NetworkInterface networkInterfaceMulticast;
+
+    public Client(String nickname, SocketInfo serverSocketInfo, SocketInfo clientSocketInfo, SocketInfo multicastSocketInfo) throws IOException {
+        this.nickname = nickname;
+
+        this.serverSocketInfo = serverSocketInfo;
+        this.clientSocketInfo = clientSocketInfo;
+        this.multicastSocketInfo = multicastSocketInfo;
+
+        setTcpSocket();
+        setUdpSocket();
+        setMulticastSocket();
     }
 
     public void start() throws IOException, InterruptedException {
 
-        Socket serverSocket = new Socket(
-                serverAddressPort.getAddress(),
-                serverAddressPort.getPort(),
-                clientAddressPort.getAddress(),
-                clientAddressPort.getPort()
-        );
-
-        DataInputStream inputStream = new DataInputStream(serverSocket.getInputStream());
-        DataOutputStream outputStream = new DataOutputStream(serverSocket.getOutputStream());
-
-        DatagramSocket serverSocketUdp = new DatagramSocket(clientAddressPort.getPort());
-
-        MulticastSocket multicastSocket = new MulticastSocket(multicastAddressPort.getPort());
-        SocketAddress socketAddress = new InetSocketAddress(
-                multicastAddressPort.getAddress(),
-                multicastAddressPort.getPort()
-        );
-        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(multicastAddressPort.getAddress());
-        multicastSocket.joinGroup(socketAddress, networkInterface);
-
-        Thread readMessagesThread = new Thread(() -> {
+        Thread readMessagesThreadTcp = new Thread(() -> {
             while (true) {
                 try {
-                    String msg = inputStream.readUTF();
+                    String msg = inputStreamTcp.readUTF();
                     System.out.println(msg);
                 } catch (IOException e) {
                     System.err.println("UWAGA: Utracono połączenie z serwerem (TCP)");
@@ -63,7 +59,7 @@ public class Client {
                 try {
                     Arrays.fill(receiveBuffer, (byte) 0);
                     DatagramPacket receivePacket = new DatagramPacket(receiveBuffer, receiveBuffer.length);
-                    serverSocketUdp.receive(receivePacket);
+                    socketUdp.receive(receivePacket);
                     String msg = new String(receivePacket.getData());
                     System.out.println(msg);
                 } catch (IOException e){
@@ -79,7 +75,7 @@ public class Client {
                 try {
                     Arrays.fill(receiveBuffer, (byte) 0);
                     DatagramPacket receivePacket = new DatagramPacket(receiveBuffer, receiveBuffer.length);
-                    multicastSocket.receive(receivePacket);
+                    socketMulticast.receive(receivePacket);
                     String msg = new String(receivePacket.getData());
                     System.out.println(msg);
                 } catch (IOException e) {
@@ -95,28 +91,28 @@ public class Client {
                 try {
                     String msg = scanner.nextLine();
                     if(msg.startsWith("U ") && msg.length()>2){
-                        byte[] msgUdp = (name + ": " + msg.substring(2)).getBytes();
+                        byte[] msgUdp = (nickname + ": " + msg.substring(2)).getBytes();
                         DatagramPacket sendPacket = new DatagramPacket(
                                 msgUdp,
                                 msgUdp.length,
-                                serverAddressPort.getAddress(),
-                                serverAddressPort.getPort()
+                                serverSocketInfo.getAddress(),
+                                serverSocketInfo.getPort()
                         );
-                        serverSocketUdp.send(sendPacket);
+                        socketUdp.send(sendPacket);
                     }
                     else if(msg.startsWith("M ") && msg.length()>2){
-                        byte[] msgMulticast = (name + ": " + msg.substring(2)).getBytes();
+                        byte[] msgMulticast = (nickname + ": " + msg.substring(2)).getBytes();
                         DatagramPacket sendPacket = new DatagramPacket(
                                 msgMulticast,
                                 msgMulticast.length,
-                                socketAddress
+                                socketAddressMulticast
                         );
-                        multicastSocket.leaveGroup(socketAddress, networkInterface);
-                        multicastSocket.send(sendPacket);
-                        multicastSocket.joinGroup(socketAddress, networkInterface);
+                        socketMulticast.leaveGroup(socketAddressMulticast, networkInterfaceMulticast);
+                        socketMulticast.send(sendPacket);
+                        socketMulticast.joinGroup(socketAddressMulticast, networkInterfaceMulticast);
                     }
                     else {
-                        outputStream.writeUTF(name + ": " + msg);
+                        outputStreamTcp.writeUTF(nickname + ": " + msg);
                     }
                 } catch (IOException e) {
                     System.err.println("UWAGA: Wiadomość nie została wysłana");
@@ -124,20 +120,46 @@ public class Client {
             }
         });
 
-        readMessagesThread.start();
+        readMessagesThreadTcp.start();
         readMessagesThreadUdp.start();
         readMessagesThreadMulticast.start();
         writeMessagesThread.start();
 
-        readMessagesThread.join();
-        serverSocket.close();
+        readMessagesThreadTcp.join();
+        socketTcp.close();
         readMessagesThreadUdp.join();
-        serverSocketUdp.close();
+        socketUdp.close();
         readMessagesThreadMulticast.join();
-        multicastSocket.close();
+        socketMulticast.close();
         writeMessagesThread.join();
 
         System.out.println("KONIEC PRACY KLIENTA");
+    }
+
+    private void setTcpSocket() throws IOException {
+        socketTcp = new Socket(
+                serverSocketInfo.getAddress(),
+                serverSocketInfo.getPort(),
+                clientSocketInfo.getAddress(),
+                clientSocketInfo.getPort()
+        );
+
+        DataInputStream inputStreamTcp = new DataInputStream(socketTcp.getInputStream());
+        DataOutputStream outputStreamTcp = new DataOutputStream(socketTcp.getOutputStream());
+    }
+
+    private void setUdpSocket() throws IOException{
+        socketUdp = new DatagramSocket(clientSocketInfo.getPort());
+    }
+
+    private void setMulticastSocket() throws IOException{
+        socketMulticast = new MulticastSocket(multicastSocketInfo.getPort());
+        socketAddressMulticast = new InetSocketAddress(
+                multicastSocketInfo.getAddress(),
+                multicastSocketInfo.getPort()
+        );
+        networkInterfaceMulticast = NetworkInterface.getByInetAddress(multicastSocketInfo.getAddress());
+        socketMulticast.joinGroup(socketAddressMulticast, networkInterfaceMulticast);
     }
 
 }

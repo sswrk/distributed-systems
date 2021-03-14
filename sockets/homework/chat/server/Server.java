@@ -1,6 +1,6 @@
 package chat.server;
 
-import chat.AddressPort;
+import chat.SocketInfo;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -16,7 +16,7 @@ public class Server {
     private ServerSocket serverSocketTcp;
     private DatagramSocket serverSocketUdp;
 
-    private Map<AddressPort, ServerClientTcp> clients;
+    private Map<SocketInfo, ServerClientTcp> clients;
 
     public Server(int portNumber){
         this.portNumber = portNumber;
@@ -55,7 +55,7 @@ public class Server {
                     this
             );
 
-            clients.put(new AddressPort(clientSocket.getInetAddress().getHostAddress(), clientSocket.getPort()), clientTcp);
+            clients.put(new SocketInfo(clientSocket.getInetAddress().getHostAddress(), clientSocket.getPort()), clientTcp);
 
             Thread clientThread = new Thread(clientTcp);
             clientThread.start();
@@ -65,7 +65,7 @@ public class Server {
 
     }
 
-    public Map<AddressPort, ServerClientTcp> getClients(){
+    public Map<SocketInfo, ServerClientTcp> getClients(){
         return clients;
     }
 
@@ -77,11 +77,11 @@ public class Server {
                 DatagramPacket receivePacket = new DatagramPacket(receiveBuffer, receiveBuffer.length);
                 serverSocketUdp.receive(receivePacket);
                 String msg = new String(receivePacket.getData());
-                String username = clients.get(new AddressPort(receivePacket.getAddress().getHostName(), receivePacket.getPort())).getId();
+                String username = clients.get(new SocketInfo(receivePacket.getAddress().getHostName(), receivePacket.getPort())).getId();
 
                 System.out.println("<" + username + "> " + msg);
 
-                for(Map.Entry<AddressPort, ServerClientTcp> client : clients.entrySet()){
+                for(Map.Entry<SocketInfo, ServerClientTcp> client : clients.entrySet()){
                     if(client.getKey().getPort()!=receivePacket.getPort()){
                         byte[] message = msg.getBytes();
                         DatagramPacket sendPacket = new DatagramPacket(
