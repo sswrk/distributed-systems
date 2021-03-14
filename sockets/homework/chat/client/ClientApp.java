@@ -8,11 +8,23 @@ public class ClientApp {
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
-        AddressPort serverAddressPort = new AddressPort("localhost", 12345);
-        AddressPort clientAddressPort = new AddressPort("localhost", 9007);
-        AddressPort multicastAddressPort = new AddressPort("239.255.255.255", 1234);
+        if(args.length!=7){
+            System.err.println("Użycie parametrów: <nick> <serveraddress> <serverpport> <clientaddress> <clientport> <multicastaddress> <multicastport>");
+        }
 
-        Client client = new Client(serverAddressPort, clientAddressPort, multicastAddressPort);
+        String name = args[0];
+        String serverAddress = args[1];
+        int serverPort = Integer.parseInt(args[2]);
+        String clientAddress = args[3];
+        int clientPort = Integer.parseInt(args[4]);
+        String multicastAddress = args[5];
+        int multicastPort = Integer.parseInt(args[6]);
+
+        AddressPort serverAddressPort = new AddressPort(serverAddress, serverPort);
+        AddressPort clientAddressPort = new AddressPort(clientAddress, clientPort);
+        AddressPort multicastAddressPort = new AddressPort(multicastAddress, multicastPort);
+
+        Client client = new Client(name, serverAddressPort, clientAddressPort, multicastAddressPort);
         client.start();
 
     }

@@ -2,7 +2,6 @@ package chat.client;
 
 import chat.AddressPort;
 
-import javax.xml.crypto.Data;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -12,14 +11,16 @@ import java.util.Scanner;
 
 public class Client {
 
+    private final String name;
     private final AddressPort serverAddressPort;
     private final AddressPort clientAddressPort;
     private final AddressPort multicastAddressPort;
 
-    public Client(AddressPort serverAddressPort, AddressPort clientAddressPort, AddressPort multicastAdressPort){
+    public Client(String name, AddressPort serverAddressPort, AddressPort clientAddressPort, AddressPort multicastAddressPort){
+        this.name = name;
         this.serverAddressPort = serverAddressPort;
         this.clientAddressPort = clientAddressPort;
-        this.multicastAddressPort = multicastAdressPort;
+        this.multicastAddressPort = multicastAddressPort;
     }
 
     public void start() throws IOException, InterruptedException {
@@ -50,7 +51,7 @@ public class Client {
                     String msg = inputStream.readUTF();
                     System.out.println(msg);
                 } catch (IOException e) {
-                    System.out.println("UWAGA: Utracono połączenie z serwerem (TCP)");
+                    System.err.println("UWAGA: Utracono połączenie z serwerem (TCP)");
                     break;
                 }
             }
@@ -66,7 +67,7 @@ public class Client {
                     String msg = new String(receivePacket.getData());
                     System.out.println(msg);
                 } catch (IOException e){
-                    System.out.println("UWAGA: Utracono połączenie z serwerem (UDP)");
+                    System.err.println("UWAGA: Utracono połączenie z serwerem (UDP)");
                     break;
                 }
             }
@@ -82,7 +83,7 @@ public class Client {
                     String msg = new String(receivePacket.getData());
                     System.out.println(msg);
                 } catch (IOException e){
-                    System.out.println("UWAGA: Utracono połączenie z kanałem multicast");
+                    System.err.println("UWAGA: Utracono połączenie z kanałem multicast");
                     break;
                 }
             }
@@ -94,7 +95,7 @@ public class Client {
                 try {
                     String msg = scanner.nextLine();
                     if(msg.startsWith("U ") && msg.length()>2){
-                        byte[] msgUdp = msg.substring(2).getBytes();
+                        byte[] msgUdp = (name + ": " + msg.substring(2)).getBytes();
                         DatagramPacket sendPacket = new DatagramPacket(
                                 msgUdp,
                                 msgUdp.length,
@@ -104,7 +105,7 @@ public class Client {
                         serverSocketUdp.send(sendPacket);
                     }
                     else if(msg.startsWith("M ") && msg.length()>2){
-                        byte[] msgMulticast = msg.substring(2).getBytes();
+                        byte[] msgMulticast = (name + ": " + msg.substring(2)).getBytes();
                         DatagramPacket sendPacket = new DatagramPacket(
                                 msgMulticast,
                                 msgMulticast.length,
@@ -115,10 +116,10 @@ public class Client {
                         multicastSocket.joinGroup(socketAddress, networkInterface);
                     }
                     else {
-                        outputStream.writeUTF(msg);
+                        outputStream.writeUTF(name + ": " + msg);
                     }
                 } catch (IOException e) {
-                    System.out.println("UWAGA: Wiadomość nie została wysłana");
+                    System.err.println("UWAGA: Wiadomość nie została wysłana");
                 }
             }
         });

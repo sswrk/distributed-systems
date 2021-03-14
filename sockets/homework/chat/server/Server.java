@@ -23,9 +23,11 @@ public class Server {
     }
 
     public void start() throws IOException {
+
         if(serverSocketTcp != null){
             throw new RuntimeException("Server is already running!");
         }
+
         serverSocketTcp = new ServerSocket(portNumber);
         serverSocketUdp = new DatagramSocket(portNumber);
 
@@ -47,7 +49,7 @@ public class Server {
 
             ServerClientTcp clientTcp = new ServerClientTcp(
                     clientSocket,
-                    "Client" + clients.size(),
+                    "C" + clients.size(),
                     new DataInputStream(clientSocket.getInputStream()),
                     new DataOutputStream(clientSocket.getOutputStream()),
                     this
@@ -75,7 +77,7 @@ public class Server {
                 DatagramPacket receivePacket = new DatagramPacket(receiveBuffer, receiveBuffer.length);
                 serverSocketUdp.receive(receivePacket);
                 String msg = new String(receivePacket.getData());
-                String username = clients.get(new AddressPort(receivePacket.getAddress().getHostName(), receivePacket.getPort())).getName();
+                String username = clients.get(new AddressPort(receivePacket.getAddress().getHostName(), receivePacket.getPort())).getId();
 
                 msg = username + ": " + msg;
                 System.out.println(msg);

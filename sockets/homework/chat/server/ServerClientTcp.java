@@ -11,14 +11,14 @@ import java.util.Map;
 public class ServerClientTcp implements Runnable{
 
     private final Socket socket;
-    private final String name;
+    private final String id;
     private final DataInputStream inputStream;
     private final DataOutputStream outputStream;
     private final Server server;
 
-    public ServerClientTcp(Socket socket, String name, DataInputStream inputStream, DataOutputStream outputStream, Server server){
+    public ServerClientTcp(Socket socket, String id, DataInputStream inputStream, DataOutputStream outputStream, Server server){
         this.socket = socket;
-        this.name = name;
+        this.id = id;
         this.inputStream = inputStream;
         this.outputStream = outputStream;
         this.server = server;
@@ -30,12 +30,12 @@ public class ServerClientTcp implements Runnable{
         while(true){
             try {
                 String messageFromClient = inputStream.readUTF();
-                System.out.println(name + ": " + messageFromClient);
+                System.out.println("<" + id + "> " + messageFromClient);
 
                 Map<AddressPort, ServerClientTcp> serverClients = server.getClients();
                 for(Map.Entry<AddressPort, ServerClientTcp> client : serverClients.entrySet()){
                     if(client.getValue()!=this){
-                        client.getValue().getOutputStream().writeUTF(name + ": " + messageFromClient);
+                        client.getValue().getOutputStream().writeUTF(messageFromClient);
                     }
                 }
 
@@ -52,14 +52,14 @@ public class ServerClientTcp implements Runnable{
             inputStream.close();
             outputStream.close();
             server.getClients().remove(new AddressPort(socket.getInetAddress().getHostName(), socket.getPort()));
-            System.out.println(name + " został odłączony od serwera");
+            System.out.println(id + " został odłączony od serwera");
         } catch (IOException e){
-            System.out.println("Problem while disconnecting user " + name);
+            System.out.println("Problem while disconnecting user " + id);
         }
     }
 
-    public String getName(){
-        return name;
+    public String getId(){
+        return id;
     }
 
     private DataOutputStream getOutputStream(){
