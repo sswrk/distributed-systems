@@ -78,9 +78,7 @@ public class ZookeeperApp {
                         programProcess = programProcessBuilder.start();
                         zooKeeper.getChildren(zNode, childrenWatcher);
                     }
-                    case NodeDeleted -> {
-                        programProcess.destroy();
-                    }
+                    case NodeDeleted -> programProcess.destroy();
                 }
                 zooKeeper.exists(zNode, programWatcher);
             } catch(IOException | InterruptedException | KeeperException e){
