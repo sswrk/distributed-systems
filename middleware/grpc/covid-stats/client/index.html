@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>COVID-19 Stats</title>
+    </head>
+    <body>
+        <header>
+            <h1>Statystyki COVID-19</h1>
+        </header>
+        <main>
+            <form action="http://localhost:8080/api/stats" method="get">
+                <label for="days">Od dnia:</label><br>
+                <input type="date" id="days" name="days" required><br><br>
+                <label for="countries">Kraje</label><br>
+                <select id="countries" name="countries" size="7" multiple required>
+                    <option value="Poland">Polska</option>
+                    <option value="Germany">Niemcy</option>
+                    <option value="France">Francja</option>
+                    <option value="Russia">Rosja</option>
+                    <option value="China">Chiny</option>
+                    <option value="Szwecja">Sweden</option>
+                    <option value="New Zealand">Nowa Zelandia</option>
+                </select><br><br>
+                <input type="submit">
+            </form>
+        </main>
+    </body>
+</html>
