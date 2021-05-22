@@ -23,7 +23,7 @@ public class FormController {
     public CovidCountryAggregateDTO getStats(
             @RequestParam("days") @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate fromDate,
             @RequestParam("countries") List<String> countries
-    ){
+    ) throws InterruptedException {
         return statsAggregateService.getCovidCountryStats(fromDate, countries);
     }
 }
