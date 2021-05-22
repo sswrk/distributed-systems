@@ -24,7 +24,7 @@ public class StatsAggregateService {
     RestCountriesAPI restCountriesAPI;
 
     public CovidCountryAggregateDTO getCovidCountryStats(LocalDate fromDate, List<String> countries) throws InterruptedException {
-        long lastDays = ChronoUnit.DAYS.between(fromDate, LocalDate.now());
+        long lastDays = ChronoUnit.DAYS.between(fromDate, LocalDate.now()) + 1;
 
         List<Integer> newCases = Collections.synchronizedList(new ArrayList<>());
         List<Integer> newDeaths = Collections.synchronizedList(new ArrayList<>());
