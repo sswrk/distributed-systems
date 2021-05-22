@@ -23,7 +23,7 @@ public class ZookeeperApp {
     }
 
     public void start() throws KeeperException, InterruptedException, IOException {
-        zooKeeper = new ZooKeeper(zookeeperServers,10000,null);
+        zooKeeper = new ZooKeeper(zookeeperServers, 10000, null);
 
         programWatcher = createProgramWatcher();
         while(true) {
