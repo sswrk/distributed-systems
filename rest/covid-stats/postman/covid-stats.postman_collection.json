@@ -1,0 +1,117 @@
+{
+	"info": {
+		"_postman_id": "e4762d26-0221-48f5-8d7a-843107447348",
+		"name": "covid-stats",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "covid",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://corona.lmao.ninja/v2/historical/{{country}}?lastdays={{lastdays}}",
+					"protocol": "https",
+					"host": [
+						"corona",
+						"lmao",
+						"ninja"
+					],
+					"path": [
+						"v2",
+						"historical",
+						"{{country}}"
+					],
+					"query": [
+						{
+							"key": "lastdays",
+							"value": "{{lastdays}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "country",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://restcountries.eu/rest/v2/name/{{country}}?fulltext=true?fields=capital;population;region;subregion;area",
+					"protocol": "https",
+					"host": [
+						"restcountries",
+						"eu"
+					],
+					"path": [
+						"rest",
+						"v2",
+						"name",
+						"{{country}}"
+					],
+					"query": [
+						{
+							"key": "fulltext",
+							"value": "true?fields=capital;population;region;subregion;area"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "aggregate",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/stats?days={{days}}&countries=France&countries=Russia&countries=China",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"stats"
+					],
+					"query": [
+						{
+							"key": "days",
+							"value": "{{days}}"
+						},
+						{
+							"key": "countries",
+							"value": "France"
+						},
+						{
+							"key": "countries",
+							"value": "Russia"
+						},
+						{
+							"key": "countries",
+							"value": "China"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "country",
+			"value": "Poland"
+		},
+		{
+			"key": "lastdays",
+			"value": "30"
+		},
+		{
+			"key": "days",
+			"value": "2021-05-19"
+		}
+	]
+}
