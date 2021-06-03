@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "grpc.model";
+option java_outer_classname = "CreatorPlatform";
+
+package creatorPlatform;
+
+service CreatorPlatformInformator
+{
+  rpc observe (ObserveRequest) returns (stream ContentInfo);
+  rpc ping (Empty) returns (Empty);
+}
+
+message Empty
+{}
+
+message ObserveRequest
+{
+  string creatorName = 1;
+}
+
+message ContentInfo
+{
+  string creatorName = 1;
+  string timestamp = 2;
+  string title = 3;
+  repeated Category categories = 4;
+  uint32 price = 5;
+  ContentType contentType = 6;
+}
+
+enum Category
+{
+  ARTISTIC = 0;
+  FUNNY = 1;
+  SERIOUS = 2;
+  DOCUMENTARY = 3;
+}
+
+enum ContentType
+{
+  PICTURE = 0;
+  VIDEO = 1;
+  POST = 2;
+}
+
