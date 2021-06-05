@@ -2,9 +2,9 @@
 #
 
 import Ice
-Ice.updateModule("Demo")
+Ice.updateModule("demo")
 
 # Modules:
-from Demo import calculator_ice
+from demo import calculator_ice
 
 # Submodules:

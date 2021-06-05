@@ -1,3 +1,5 @@
+import queue
+
 import generated.creator_platform_pb2 as creator_platform
 import generated.creator_platform_pb2_grpc as creator_platform_grpc
 
@@ -41,6 +43,14 @@ def generate_creator_data():
     return ContentData(title, categories, price, content_type)
 
 
+queues = {
+    "John123": queue.Queue(),
+    "Annie345": queue.Queue(),
+    "XTRACREATOR23": queue.Queue(),
+    "RacingFan": queue.Queue()
+}
+
+
 class CreatorPlatformServicer(creator_platform_grpc.CreatorPlatformInformatorServicer):
     def __init__(self):
         self.creators = ("John123", "Annie345", "XTRACREATOR23", "RacingFan")
@@ -62,7 +72,11 @@ class CreatorPlatformServicer(creator_platform_grpc.CreatorPlatformInformatorSer
 
         while True:
             time.sleep(random.randint(3, 6))
-            creator_data = generate_creator_data()
+            if not queues[creator_name].empty():
+                creator_data = queues[creator_name].get()
+            else:
+                creator_data = generate_creator_data()
+                print(creator_name + " has added new content: " + creator_data.title)
             current_datetime = datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
             content_info = creator_platform.ContentInfo(creatorName=creator_name,
                                                         timestamp=current_datetime,
@@ -71,11 +85,19 @@ class CreatorPlatformServicer(creator_platform_grpc.CreatorPlatformInformatorSer
                                                         price=creator_data.price,
                                                         contentType=creator_data.content_type)
 
+            retries = 0
+            while not context.is_active() and retries < 10:
+                retries += 1
+                time.sleep(3)
+
             if not context.is_active():
-                print("Lost connection with client")
+                queues[creator_name].put(creator_data)
+                break
 
             yield content_info
-            print(creator_name + " has added new content: " + creator_data.title)
+            print("Sent notification about " + creator_name + ": " + creator_data.title)
+
+        print("Client has closed the connection")
 
     def ping(self, request, context):
         return creator_platform.Empty()

@@ -2,17 +2,15 @@
 #ifndef CALC_ICE
 #define CALC_ICE
 
-module Demo
+module demo
 {
   enum operation { MIN, MAX, AVG };
   
-  exception NoInput {};
+  exception OutOfBounds {};
 
   struct A
   {
-    short a;
-    long b;
-    float c;
+    int a;
     string d;
   }
 
@@ -20,7 +18,7 @@ module Demo
   {
     long add(int a, int b);
     long subtract(int a, int b);
-    void op(A a1, short b1); //za³ó¿my, ¿e to te¿ jest operacja arytmetyczna ;)
+    A op(A a1, int b1);
   };
 
 };

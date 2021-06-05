@@ -16,7 +16,7 @@ public class Controller {
 
     private final List<ObserveRequest> subscriptions;
     private List<Thread> threads;
-    private List<NotificationListener> handlers;
+    private List<NotificationListener> listeners;
 
     public Controller(Channel channel) {
         this.lock = new ReentrantLock();
@@ -28,7 +28,7 @@ public class Controller {
 
         this.subscriptions = new LinkedList<>();
         this.threads = new ArrayList<>();
-        this.handlers = new ArrayList<>();
+        this.listeners = new ArrayList<>();
     }
 
     public void addSubscription(ObserveRequest request) {
@@ -40,7 +40,7 @@ public class Controller {
     }
 
     public void addHandler(NotificationListener handler) {
-        this.handlers.add(handler);
+        this.listeners.add(handler);
     }
 
     public void reportError() {
@@ -58,41 +58,38 @@ public class Controller {
         if (this.subscriptions.isEmpty()) {
             return;
         }
-
         System.out.println("Disconnected from server");
 
-        int failedRequests = 1;
-        while (failedRequests < 30) {
+        int retries = 1;
+        while (retries < 10) {
             try {
-                Thread.sleep(500);
+                Thread.sleep(3000);
                 this.blockingStub.ping(Empty.newBuilder().build());
+                break;
             } catch (Exception e) {
-                failedRequests++;
+                retries++;
                 System.out.println("Trying to reconnect...");
-                continue;
             }
-            break;
         }
 
-        if (failedRequests == 30) {
+        if (retries == 10) {
             System.out.println("Couldn't reconnect. Quitting...");
             System.exit(1);
         }
 
         this.threads = new ArrayList<>();
-        this.handlers = new ArrayList<>();
+        this.listeners = new ArrayList<>();
         for (ObserveRequest request: this.subscriptions) {
             NotificationListener handler = new NotificationListener(request, this, this.channel);
             Thread thread = new Thread(handler);
             this.threads.add(thread);
-            this.handlers.add(handler);
+            this.listeners.add(handler);
         }
 
         this.reconnecting = false;
         System.out.println("Reconnected!");
         this.lock.unlock();
 
-        for (Thread thread: threads)
-            thread.start();
+        threads.forEach(Thread::start);
     }
 }
