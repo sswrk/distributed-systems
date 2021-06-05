@@ -64,7 +64,7 @@ if __name__ == "__main__":
         }
 
         while True:
-            command = input("> ").strip()
+            command = input(":").strip()
 
             if command in commands.keys():
                 vehicle = command.split(' ', 1)[0]
