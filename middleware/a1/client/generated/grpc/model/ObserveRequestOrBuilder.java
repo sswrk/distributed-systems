@@ -18,4 +18,16 @@ public interface ObserveRequestOrBuilder extends
    */
   com.google.protobuf.ByteString
       getCreatorNameBytes();
+
+  /**
+   * <code>string clientId = 2;</code>
+   * @return The clientId.
+   */
+  java.lang.String getClientId();
+  /**
+   * <code>string clientId = 2;</code>
+   * @return The bytes for clientId.
+   */
+  com.google.protobuf.ByteString
+      getClientIdBytes();
 }

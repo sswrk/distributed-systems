@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'\n\ngrpc.modelB\017CreatorPlatformP\001',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x16\x63reator_platform.proto\x12\x0f\x63reatorPlatform\"\x07\n\x05\x45mpty\"%\n\x0eObserveRequest\x12\x13\n\x0b\x63reatorName\x18\x01 \x01(\t\"\xb5\x01\n\x0b\x43ontentInfo\x12\x13\n\x0b\x63reatorName\x18\x01 \x01(\t\x12\x11\n\ttimestamp\x18\x02 \x01(\t\x12\r\n\x05title\x18\x03 \x01(\t\x12-\n\ncategories\x18\x04 \x03(\x0e\x32\x19.creatorPlatform.Category\x12\r\n\x05price\x18\x05 \x01(\r\x12\x31\n\x0b\x63ontentType\x18\x06 \x01(\x0e\x32\x1c.creatorPlatform.ContentType*A\n\x08\x43\x61tegory\x12\x0c\n\x08\x41RTISTIC\x10\x00\x12\t\n\x05\x46UNNY\x10\x01\x12\x0b\n\x07SERIOUS\x10\x02\x12\x0f\n\x0b\x44OCUMENTARY\x10\x03*/\n\x0b\x43ontentType\x12\x0b\n\x07PICTURE\x10\x00\x12\t\n\x05VIDEO\x10\x01\x12\x08\n\x04POST\x10\x02\x32\x9f\x01\n\x19\x43reatorPlatformInformator\x12J\n\x07observe\x12\x1f.creatorPlatform.ObserveRequest\x1a\x1c.creatorPlatform.ContentInfo0\x01\x12\x36\n\x04ping\x12\x16.creatorPlatform.Empty\x1a\x16.creatorPlatform.EmptyB\x1f\n\ngrpc.modelB\x0f\x43reatorPlatformP\x01\x62\x06proto3'
+  serialized_pb=b'\n\x16\x63reator_platform.proto\x12\x0f\x63reatorPlatform\"\x07\n\x05\x45mpty\"7\n\x0eObserveRequest\x12\x13\n\x0b\x63reatorName\x18\x01 \x01(\t\x12\x10\n\x08\x63lientId\x18\x02 \x01(\t\"\xb5\x01\n\x0b\x43ontentInfo\x12\x13\n\x0b\x63reatorName\x18\x01 \x01(\t\x12\x11\n\ttimestamp\x18\x02 \x01(\t\x12\r\n\x05title\x18\x03 \x01(\t\x12-\n\ncategories\x18\x04 \x03(\x0e\x32\x19.creatorPlatform.Category\x12\r\n\x05price\x18\x05 \x01(\r\x12\x31\n\x0b\x63ontentType\x18\x06 \x01(\x0e\x32\x1c.creatorPlatform.ContentType*A\n\x08\x43\x61tegory\x12\x0c\n\x08\x41RTISTIC\x10\x00\x12\t\n\x05\x46UNNY\x10\x01\x12\x0b\n\x07SERIOUS\x10\x02\x12\x0f\n\x0b\x44OCUMENTARY\x10\x03*/\n\x0b\x43ontentType\x12\x0b\n\x07PICTURE\x10\x00\x12\t\n\x05VIDEO\x10\x01\x12\x08\n\x04POST\x10\x02\x32\x9f\x01\n\x19\x43reatorPlatformInformator\x12J\n\x07observe\x12\x1f.creatorPlatform.ObserveRequest\x1a\x1c.creatorPlatform.ContentInfo0\x01\x12\x36\n\x04ping\x12\x16.creatorPlatform.Empty\x1a\x16.creatorPlatform.EmptyB\x1f\n\ngrpc.modelB\x0f\x43reatorPlatformP\x01\x62\x06proto3'
 )
 
 _CATEGORY = _descriptor.EnumDescriptor(
@@ -53,8 +53,8 @@ _CATEGORY = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=275,
-  serialized_end=340,
+  serialized_start=293,
+  serialized_end=358,
 )
 _sym_db.RegisterEnumDescriptor(_CATEGORY)
 
@@ -84,8 +84,8 @@ _CONTENTTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=342,
-  serialized_end=389,
+  serialized_start=360,
+  serialized_end=407,
 )
 _sym_db.RegisterEnumDescriptor(_CONTENTTYPE)
 
@@ -140,6 +140,13 @@ _OBSERVEREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='clientId', full_name='creatorPlatform.ObserveRequest.clientId', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -153,7 +160,7 @@ _OBSERVEREQUEST = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=52,
-  serialized_end=89,
+  serialized_end=107,
 )
 
 
@@ -219,8 +226,8 @@ _CONTENTINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=92,
-  serialized_end=273,
+  serialized_start=110,
+  serialized_end=291,
 )
 
 _CONTENTINFO.fields_by_name['categories'].enum_type = _CATEGORY
@@ -263,8 +270,8 @@ _CREATORPLATFORMINFORMATOR = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=392,
-  serialized_end=551,
+  serialized_start=410,
+  serialized_end=569,
   methods=[
   _descriptor.MethodDescriptor(
     name='observe',

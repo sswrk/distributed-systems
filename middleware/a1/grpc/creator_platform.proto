@@ -18,6 +18,7 @@ message Empty
 message ObserveRequest
 {
   string creatorName = 1;
+  string clientId = 2;
 }
 
 message ContentInfo

@@ -43,12 +43,7 @@ def generate_creator_data():
     return ContentData(title, categories, price, content_type)
 
 
-queues = {
-    "John123": queue.Queue(),
-    "Annie345": queue.Queue(),
-    "XTRACREATOR23": queue.Queue(),
-    "RacingFan": queue.Queue()
-}
+queues = {}
 
 
 class CreatorPlatformServicer(creator_platform_grpc.CreatorPlatformInformatorServicer):
@@ -58,6 +53,7 @@ class CreatorPlatformServicer(creator_platform_grpc.CreatorPlatformInformatorSer
     def observe(self, request, context):
         try:
             creator_name = request.creatorName
+            client_id = request.clientId
         except Exception as e:
             context.set_details(str(e))
             context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
@@ -68,12 +64,20 @@ class CreatorPlatformServicer(creator_platform_grpc.CreatorPlatformInformatorSer
             context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
             return creator_platform.ContentInfo()
 
-        print("Added new " + creator_name + " observer")
+        print("Added new " + creator_name + " observer: " + client_id)
+
+        if client_id not in queues:
+            queues[client_id] = {
+                "John123": queue.Queue(),
+                "Annie345": queue.Queue(),
+                "XTRACREATOR23": queue.Queue(),
+                "RacingFan": queue.Queue()
+            }
 
         while True:
             time.sleep(random.randint(3, 6))
-            if not queues[creator_name].empty():
-                creator_data = queues[creator_name].get()
+            if not queues[client_id][creator_name].empty():
+                creator_data = queues[client_id][creator_name].get()
             else:
                 creator_data = generate_creator_data()
                 print(creator_name + " has added new content: " + creator_data.title)
@@ -91,7 +95,7 @@ class CreatorPlatformServicer(creator_platform_grpc.CreatorPlatformInformatorSer
                 time.sleep(3)
 
             if not context.is_active():
-                queues[creator_name].put(creator_data)
+                queues[client_id][creator_name].put(creator_data)
                 break
 
             yield content_info

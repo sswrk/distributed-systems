@@ -8,8 +8,10 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        System.out.println("Enter creators you want to subscribe");
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("Enter your ID");
+        String userId = bufferedReader.readLine();
+        System.out.println("Enter creators you want to subscribe");
         List<String> companies = new ArrayList<>();
         while(true) {
             String input = bufferedReader.readLine();
@@ -31,6 +33,7 @@ public class Main {
         companies.forEach(company -> {
             ObserveRequest request = ObserveRequest.newBuilder()
                     .setCreatorName(company)
+                    .setClientId(userId)
                     .build();
             NotificationListener handler = new NotificationListener(request, controller, channel);
             Thread thread = new Thread(handler);

@@ -17,6 +17,7 @@ private static final long serialVersionUID = 0L;
   }
   private ObserveRequest() {
     creatorName_ = "";
+    clientId_ = "";
   }
 
   @java.lang.Override
@@ -53,6 +54,12 @@ private static final long serialVersionUID = 0L;
             java.lang.String s = input.readStringRequireUtf8();
 
             creatorName_ = s;
+            break;
+          }
+          case 18: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            clientId_ = s;
             break;
           }
           default: {
@@ -125,6 +132,44 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int CLIENTID_FIELD_NUMBER = 2;
+  private volatile java.lang.Object clientId_;
+  /**
+   * <code>string clientId = 2;</code>
+   * @return The clientId.
+   */
+  @java.lang.Override
+  public java.lang.String getClientId() {
+    java.lang.Object ref = clientId_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      clientId_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string clientId = 2;</code>
+   * @return The bytes for clientId.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getClientIdBytes() {
+    java.lang.Object ref = clientId_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      clientId_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -142,6 +187,9 @@ private static final long serialVersionUID = 0L;
     if (!getCreatorNameBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 1, creatorName_);
     }
+    if (!getClientIdBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, clientId_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -153,6 +201,9 @@ private static final long serialVersionUID = 0L;
     size = 0;
     if (!getCreatorNameBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, creatorName_);
+    }
+    if (!getClientIdBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, clientId_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -171,6 +222,8 @@ private static final long serialVersionUID = 0L;
 
     if (!getCreatorName()
         .equals(other.getCreatorName())) return false;
+    if (!getClientId()
+        .equals(other.getClientId())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -184,6 +237,8 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + CREATORNAME_FIELD_NUMBER;
     hash = (53 * hash) + getCreatorName().hashCode();
+    hash = (37 * hash) + CLIENTID_FIELD_NUMBER;
+    hash = (53 * hash) + getClientId().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -319,6 +374,8 @@ private static final long serialVersionUID = 0L;
       super.clear();
       creatorName_ = "";
 
+      clientId_ = "";
+
       return this;
     }
 
@@ -346,6 +403,7 @@ private static final long serialVersionUID = 0L;
     public grpc.model.ObserveRequest buildPartial() {
       grpc.model.ObserveRequest result = new grpc.model.ObserveRequest(this);
       result.creatorName_ = creatorName_;
+      result.clientId_ = clientId_;
       onBuilt();
       return result;
     }
@@ -396,6 +454,10 @@ private static final long serialVersionUID = 0L;
       if (other == grpc.model.ObserveRequest.getDefaultInstance()) return this;
       if (!other.getCreatorName().isEmpty()) {
         creatorName_ = other.creatorName_;
+        onChanged();
+      }
+      if (!other.getClientId().isEmpty()) {
+        clientId_ = other.clientId_;
         onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
@@ -499,6 +561,82 @@ private static final long serialVersionUID = 0L;
   checkByteStringIsUtf8(value);
       
       creatorName_ = value;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object clientId_ = "";
+    /**
+     * <code>string clientId = 2;</code>
+     * @return The clientId.
+     */
+    public java.lang.String getClientId() {
+      java.lang.Object ref = clientId_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        clientId_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string clientId = 2;</code>
+     * @return The bytes for clientId.
+     */
+    public com.google.protobuf.ByteString
+        getClientIdBytes() {
+      java.lang.Object ref = clientId_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        clientId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string clientId = 2;</code>
+     * @param value The clientId to set.
+     * @return This builder for chaining.
+     */
+    public Builder setClientId(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      clientId_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string clientId = 2;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearClientId() {
+      
+      clientId_ = getDefaultInstance().getClientId();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string clientId = 2;</code>
+     * @param value The bytes for clientId to set.
+     * @return This builder for chaining.
+     */
+    public Builder setClientIdBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      clientId_ = value;
       onChanged();
       return this;
     }
