@@ -5,6 +5,7 @@ import io.grpc.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -26,13 +27,16 @@ public class Main {
         ManagedChannel channel = ManagedChannelBuilder
                 .forAddress("localhost", 50051)
                 .usePlaintext()
+                .keepAliveTime(10000, TimeUnit.MILLISECONDS)
+                .keepAliveTimeout(5000, TimeUnit.MILLISECONDS)
+                .keepAliveWithoutCalls(true)
                 .build();
 
         Controller controller = new Controller(channel);
 
-        creators.forEach(company -> {
+        creators.forEach(creator -> {
             ObserveRequest request = ObserveRequest.newBuilder()
-                    .setCreatorName(company)
+                    .setCreatorName(creator)
                     .setClientId(userId)
                     .build();
             NotificationListener handler = new NotificationListener(request, controller, channel);
