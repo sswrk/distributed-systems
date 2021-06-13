@@ -12,13 +12,13 @@ public class Main {
         System.out.println("Enter your ID");
         String userId = bufferedReader.readLine();
         System.out.println("Enter creators you want to subscribe");
-        List<String> companies = new ArrayList<>();
+        List<String> creators = new ArrayList<>();
         while(true) {
             String input = bufferedReader.readLine();
             if (input.equals("")) {
                 break;
             } else {
-                companies.add(input);
+                creators.add(input);
             }
         }
         System.out.println("Creators entered!");
@@ -30,7 +30,7 @@ public class Main {
 
         Controller controller = new Controller(channel);
 
-        companies.forEach(company -> {
+        creators.forEach(company -> {
             ObserveRequest request = ObserveRequest.newBuilder()
                     .setCreatorName(company)
                     .setClientId(userId)
