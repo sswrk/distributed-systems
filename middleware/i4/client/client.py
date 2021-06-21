@@ -5,7 +5,7 @@ import catalogue
 
 
 def init_sedan(communicator):
-    car_base = communicator.stringToProxy("car/sedan:default -p 10000")
+    car_base = communicator.oProxstringTy("car/sedan:default -p 10000")
     return catalogue.CarPrx.checkedCast(car_base)
 
 
